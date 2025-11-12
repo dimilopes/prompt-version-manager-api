@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "dgSpecHash": "OCjXGLZuK12/hoWVcDJbDQhZQmTFu0BDbBMqxuX6Gu+nqReNxHVgswgMNDaLet06WYghJl0mSGqPV1c8p/DLKg==",
+  "success": true,
+  "projectFilePath": "/home/ubuntu/prompt-version-manager-api/PromptVersionManager/PromptVersionManager.csproj",
+  "expectedPackageFiles": [
+    "/home/ubuntu/.nuget/packages/dapper/2.1.66/dapper.2.1.66.nupkg.sha512",
+    "/home/ubuntu/.nuget/packages/microsoft.aspnetcore.openapi/8.0.21/microsoft.aspnetcore.openapi.8.0.21.nupkg.sha512",
+    "/home/ubuntu/.nuget/packages/microsoft.extensions.apidescription.server/6.0.5/microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
+    "/home/ubuntu/.nuget/packages/microsoft.openapi/1.6.14/microsoft.openapi.1.6.14.nupkg.sha512",
+    "/home/ubuntu/.nuget/packages/swashbuckle.aspnetcore/6.6.2/swashbuckle.aspnetcore.6.6.2.nupkg.sha512",
+    "/home/ubuntu/.nuget/packages/swashbuckle.aspnetcore.swagger/6.6.2/swashbuckle.aspnetcore.swagger.6.6.2.nupkg.sha512",
+    "/home/ubuntu/.nuget/packages/swashbuckle.aspnetcore.swaggergen/6.6.2/swashbuckle.aspnetcore.swaggergen.6.6.2.nupkg.sha512",
+    "/home/ubuntu/.nuget/packages/swashbuckle.aspnetcore.swaggerui/6.6.2/swashbuckle.aspnetcore.swaggerui.6.6.2.nupkg.sha512",
+    "/home/ubuntu/.nuget/packages/system.data.sqlite/2.0.2/system.data.sqlite.2.0.2.nupkg.sha512"
+  ],
+  "logs": []
+}

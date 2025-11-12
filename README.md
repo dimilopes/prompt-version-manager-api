@@ -44,15 +44,12 @@ PromptVersionManager/
 
 ### ✅ Fase 1: Modelagem do Domínio (Branch: `feature/modelagem-dominio`)
 
-**Status**: Concluída
-
 **Implementações**:
-- ✅ Criação da classe `Prompt` com todas as propriedades necessárias
-- ✅ Implementação da classe `DatabaseConnection` para gerenciar conexões SQLite
-- ✅ Configuração do banco de dados com inicialização automática de tabelas
-- ✅ Integração com injeção de dependência do ASP.NET Core
-- ✅ Configuração de CORS para permitir requisições de diferentes origens
-- ✅ Compilação bem-sucedida do projeto
+- Criação da classe `Prompt` com 12 propriedades para rastreamento de versões
+- Implementação da classe `DatabaseConnection` para gerenciar conexões SQLite
+- Configuração do banco de dados com tabela `Prompts` criada automaticamente
+- Integração com injeção de dependência do ASP.NET Core
+- Configuração de CORS para permitir requisições de diferentes origens
 
 **Propriedades da Entidade Prompt**:
 
@@ -71,23 +68,15 @@ PromptVersionManager/
 | Tags | string | Tags para categorização |
 | ModelType | string | Modelo de IA associado |
 
-**Banco de Dados**:
-- Arquivo: `promptmanager.db`
-- Tabela: `Prompts`
-- Inicialização automática ao iniciar a aplicação
-
 ### ✅ Fase 2: Implementação do Core (Branch: `feature/implementacao-core`)
 
-**Status**: Concluída
-
 **Implementações**:
-- ✅ Criação da interface `IPromptRepository` para abstração de dados
-- ✅ Implementação de `PromptRepository` com Dapper para operações CRUD
-- ✅ Criação da interface `IPromptService` para lógica de negócio
-- ✅ Implementação de `PromptService` com validações e logging
-- ✅ Criação de `PromptsController` com endpoints REST
-- ✅ Registro de serviços na injeção de dependência
-- ✅ Compilação bem-sucedida do projeto
+- **Repository Pattern**: Interface `IPromptRepository` e implementação `PromptRepository` com Dapper
+- **Service Layer**: Interface `IPromptService` e implementação `PromptService` com lógica de negócio
+- **Controller**: `PromptsController` com 10 endpoints REST completos
+- Injeção de dependência completa
+- Documentação Swagger/OpenAPI integrada
+- Logging estruturado em todas as operações
 
 **Endpoints Implementados**:
 
@@ -104,54 +93,77 @@ PromptVersionManager/
 | DELETE | `/api/prompts/{id}` | Deleta um prompt |
 | POST | `/api/prompts/{id}/increment-version` | Incrementa a versão de um prompt |
 
-**Padrões Implementados**:
-- Repository Pattern para abstração de dados
-- Service Layer para lógica de negócio
-- Dependency Injection para inversão de controle
-- Logging estruturado em todas as operações
-- Tratamento de exceções com códigos HTTP apropriados
-
 ### ✅ Fase 3: Validações e Melhorias (Branch: `feature/validacoes-melhorias`)
 
-**Status**: Concluída
-
 **Implementações**:
-- ✅ Criação de `PromptValidator` para validações de negócio
-- ✅ Implementação de exceções customizadas (`ApiException`, `ValidationException`, `ResourceNotFoundException`, etc.)
-- ✅ Criação de middleware `ExceptionHandlingMiddleware` para tratamento global de exceções
-- ✅ Atualização de `PromptService` com validações robustas
-- ✅ Resposta de erro padronizada com `ErrorResponse`
-- ✅ Logging estruturado em todas as operações
-- ✅ Compilação bem-sucedida do projeto
+- Criação de `PromptValidator` para validações de negócio
+- Implementação de exceções customizadas
+- Criação de middleware para tratamento global de exceções
+- Atualização de `PromptService` com validações robustas
+- Resposta de erro padronizada
+- Logging estruturado em todas as operações
 
-## Validações Implementadas
+---
 
-**Regras de Validação por Campo**:
+## 🛡️ Tratamento de Exceções
 
-| Campo | Validações |
-|-------|-----------|
-| Nome | Mínimo 3 caracteres, máximo 255 caracteres, obrigatório |
-| Conteúdo | Mínimo 10 caracteres, máximo 10.000 caracteres, obrigatório |
-| Descrição | Máximo 1.000 caracteres, opcional |
-| Tags | Máximo 500 caracteres, máximo 20 tags, opcional |
-| Status | Valores válidos: Ativo, Inativo, Arquivado, Revisão |
-| ID | Deve ser maior que zero |
+A API implementa um sistema robusto e centralizado de tratamento de exceções através de um middleware global que padroniza todas as respostas de erro.
 
-## Tratamento de Exceções
+### Exceções Customizadas Implementadas
 
-A API implementa um sistema robusto de tratamento de exceções com middleware global que padroniza todas as respostas de erro.
+A aplicação define as seguintes exceções customizadas, todas herdando de `ApiException`:
 
-**Exceções Implementadas**:
+#### 1. **ValidationException** (Código HTTP: 400)
+Lançada quando há erros de validação de dados de entrada.
 
-| Exceção | Código HTTP | Descrição |
-|---------|------------|----------|
-| ValidationException | 400 | Erros de validação de dados |
-| ResourceNotFoundException | 404 | Recurso não encontrado |
-| UnauthorizedException | 401 | Operação não autorizada |
-| ConflictException | 409 | Conflito de dados |
-| DatabaseException | 500 | Erro ao acessar banco de dados |
+```csharp
+throw new ValidationException("Erro na validação do prompt", 
+    new List<string> { "Nome deve ter no mínimo 3 caracteres" });
+```
 
-**Exemplo de Resposta de Erro**:
+#### 2. **ResourceNotFoundException** (Código HTTP: 404)
+Lançada quando um recurso solicitado não é encontrado no banco de dados.
+
+```csharp
+throw new ResourceNotFoundException($"Prompt com ID {id} não encontrado");
+```
+
+#### 3. **UnauthorizedException** (Código HTTP: 401)
+Lançada quando uma operação não é autorizada.
+
+```csharp
+throw new UnauthorizedException("Acesso negado");
+```
+
+#### 4. **ConflictException** (Código HTTP: 409)
+Lançada quando há um conflito nos dados (ex: falha ao atualizar).
+
+```csharp
+throw new ConflictException("Falha ao atualizar o prompt");
+```
+
+#### 5. **DatabaseException** (Código HTTP: 500)
+Lançada quando há erros ao acessar o banco de dados.
+
+```csharp
+throw new DatabaseException("Erro ao obter prompts", ex);
+```
+
+### Middleware de Tratamento Global
+
+O middleware `ExceptionHandlingMiddleware` intercepta todas as exceções não tratadas e as converte em respostas HTTP padronizadas.
+
+**Localização**: `Middleware/ExceptionHandlingMiddleware.cs`
+
+**Funcionalidades**:
+- Captura todas as exceções não tratadas
+- Mapeia exceções customizadas para códigos HTTP apropriados
+- Retorna respostas padronizadas em JSON
+- Registra erros para auditoria e debugging
+
+### Formato Padronizado de Resposta de Erro
+
+Todas as respostas de erro seguem o padrão abaixo:
 
 ```json
 {
@@ -165,6 +177,78 @@ A API implementa um sistema robusto de tratamento de exceções com middleware g
   ]
 }
 ```
+
+**Campos da Resposta**:
+- `statusCode`: Código HTTP da resposta
+- `message`: Mensagem de erro principal
+- `details`: Detalhes adicionais (opcional)
+- `timestamp`: Data e hora do erro em UTC
+- `errors`: Lista de erros específicos (apenas para ValidationException)
+
+### Exemplos de Tratamento de Exceções
+
+#### Exemplo 1: Validação de Entrada
+```csharp
+public async Task<Prompt> CreatePromptAsync(Prompt prompt)
+{
+    if (prompt == null)
+    {
+        throw new ValidationException("Dados do prompt são obrigatórios", 
+            new List<string> { "Prompt não pode ser nulo" });
+    }
+
+    var validationResult = _validator.ValidateForCreation(prompt);
+    if (!validationResult.IsValid)
+    {
+        throw new ValidationException("Erro na validação do prompt", 
+            validationResult.Errors);
+    }
+    // ... resto da implementação
+}
+```
+
+#### Exemplo 2: Recurso Não Encontrado
+```csharp
+public async Task<Prompt> GetPromptByIdAsync(int id)
+{
+    var prompt = await _promptRepository.GetByIdAsync(id);
+    
+    if (prompt == null)
+    {
+        throw new ResourceNotFoundException($"Prompt com ID {id} não encontrado");
+    }
+    
+    return prompt;
+}
+```
+
+#### Exemplo 3: Erro de Banco de Dados
+```csharp
+try
+{
+    return await _promptRepository.GetAllAsync();
+}
+catch (Exception ex)
+{
+    _logger.LogError(ex, "Erro ao obter todos os prompts");
+    throw new DatabaseException("Erro ao obter prompts do banco de dados", ex);
+}
+```
+
+### Validações Implementadas
+
+O `PromptValidator` implementa as seguintes regras de validação:
+
+| Campo | Validações |
+|-------|-----------|
+| Nome | Mínimo 3 caracteres, máximo 255 caracteres, obrigatório |
+| Conteúdo | Mínimo 10 caracteres, máximo 10.000 caracteres, obrigatório |
+| Descrição | Máximo 1.000 caracteres, opcional |
+| Tags | Máximo 500 caracteres, máximo 20 tags, opcional |
+| Status | Valores válidos: Ativo, Inativo, Arquivado, Revisão |
+| ID | Deve ser maior que zero |
+
+---
 
 ## Como Executar
 
@@ -203,29 +287,6 @@ A API estará disponível em `https://localhost:7000` (HTTPS) ou `http://localho
 Após iniciar a aplicação, acesse a documentação interativa em:
 ```
 https://localhost:7000/swagger
-```
-
-## Configuração do Banco de Dados
-
-A conexão com o banco de dados SQLite é configurada em `appsettings.json`:
-
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Data Source=promptmanager.db;Version=3;"
-  }
-}
-```
-
-O banco de dados é inicializado automaticamente ao iniciar a aplicação, criando a tabela `Prompts` se ela não existir.
-
-## Teste de Conexão
-
-Para verificar se a conexão com o banco de dados está funcionando, a classe `DatabaseConnection` fornece o método `TestConnection()`:
-
-```csharp
-var db = new DatabaseConnection(connectionString);
-bool isConnected = db.TestConnection();
 ```
 
 ## Exemplos de Uso
@@ -284,15 +345,17 @@ curl -X DELETE https://localhost:7000/api/prompts/1
 curl -X POST https://localhost:7000/api/prompts/1/increment-version
 ```
 
-## Próximos Passos
+---
 
-1. Implementar testes unitários com xUnit
-2. Adicionar autenticação e autorização (JWT)
-3. Implementar paginação e filtros avançados
-4. Adicionar cache distribuído (Redis)
-5. Implementar rate limiting
-6. Adicionar auditoria de mudanças
-7. Implementar versionamento de API
+## Padrões de Arquitetura Implementados
+
+- **Repository Pattern**: Abstração da camada de dados
+- **Service Layer**: Lógica de negócio centralizada
+- **Dependency Injection**: Inversão de controle
+- **Middleware Pattern**: Tratamento centralizado de exceções
+- **Validator Pattern**: Validações de negócio reutilizáveis
+
+---
 
 ## Contribuindo
 

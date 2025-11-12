@@ -364,15 +364,3 @@ Para contribuir com o projeto, siga o fluxo de branches:
 1. Crie uma branch a partir de `develop`
 2. Faça suas alterações
 3. Envie um pull request com uma descrição clara
-
-## Licença
-
-Este projeto está sob a licença MIT.
-
-## Autor
-
-Desenvolvido por **Manus AI** em colaboração com **dimilopes**.
-
----
-
-**Última atualização**: 12 de Novembro de 2025

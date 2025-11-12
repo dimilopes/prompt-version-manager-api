@@ -29,6 +29,12 @@ PromptVersionManager/
 │   └── PromptService.cs       # Implementação do serviço
 ├── Controllers/           # Controladores da API
 │   └── PromptsController.cs   # Controller CRUD de Prompts
+├── Validators/            # Validadores de dados
+│   └── PromptValidator.cs     # Validador de Prompts
+├── Exceptions/            # Exceções customizadas
+│   └── ApiException.cs        # Exceções da API
+├── Middleware/            # Middlewares da aplicação
+│   └── ExceptionHandlingMiddleware.cs  # Tratamento global de exceções
 ├── Program.cs            # Configuração da aplicação
 ├── appsettings.json      # Configurações da aplicação
 └── PromptVersionManager.csproj  # Arquivo de projeto
@@ -105,15 +111,60 @@ PromptVersionManager/
 - Logging estruturado em todas as operações
 - Tratamento de exceções com códigos HTTP apropriados
 
-### ⏳ Fase 3: Validações e Melhorias (Branch: `feature/validacoes-melhorias`)
+### ✅ Fase 3: Validações e Melhorias (Branch: `feature/validacoes-melhorias`)
 
-**Status**: Pendente
+**Status**: Concluída
 
-**Implementações Planejadas**:
-- Tratamento robusto de exceções
-- Validações de entrada de dados
-- Logging estruturado
-- Documentação completa do README
+**Implementações**:
+- ✅ Criação de `PromptValidator` para validações de negócio
+- ✅ Implementação de exceções customizadas (`ApiException`, `ValidationException`, `ResourceNotFoundException`, etc.)
+- ✅ Criação de middleware `ExceptionHandlingMiddleware` para tratamento global de exceções
+- ✅ Atualização de `PromptService` com validações robustas
+- ✅ Resposta de erro padronizada com `ErrorResponse`
+- ✅ Logging estruturado em todas as operações
+- ✅ Compilação bem-sucedida do projeto
+
+## Validações Implementadas
+
+**Regras de Validação por Campo**:
+
+| Campo | Validações |
+|-------|-----------|
+| Nome | Mínimo 3 caracteres, máximo 255 caracteres, obrigatório |
+| Conteúdo | Mínimo 10 caracteres, máximo 10.000 caracteres, obrigatório |
+| Descrição | Máximo 1.000 caracteres, opcional |
+| Tags | Máximo 500 caracteres, máximo 20 tags, opcional |
+| Status | Valores válidos: Ativo, Inativo, Arquivado, Revisão |
+| ID | Deve ser maior que zero |
+
+## Tratamento de Exceções
+
+A API implementa um sistema robusto de tratamento de exceções com middleware global que padroniza todas as respostas de erro.
+
+**Exceções Implementadas**:
+
+| Exceção | Código HTTP | Descrição |
+|---------|------------|----------|
+| ValidationException | 400 | Erros de validação de dados |
+| ResourceNotFoundException | 404 | Recurso não encontrado |
+| UnauthorizedException | 401 | Operação não autorizada |
+| ConflictException | 409 | Conflito de dados |
+| DatabaseException | 500 | Erro ao acessar banco de dados |
+
+**Exemplo de Resposta de Erro**:
+
+```json
+{
+  "statusCode": 400,
+  "message": "Erro na validação do prompt",
+  "details": null,
+  "timestamp": "2025-11-12T10:30:00Z",
+  "errors": [
+    "Nome deve ter no mínimo 3 caracteres",
+    "Conteúdo é obrigatório"
+  ]
+}
+```
 
 ## Como Executar
 
@@ -177,14 +228,71 @@ var db = new DatabaseConnection(connectionString);
 bool isConnected = db.TestConnection();
 ```
 
+## Exemplos de Uso
+
+### Criar um novo Prompt
+
+```bash
+curl -X POST https://localhost:7000/api/prompts \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Gerador de Código Python",
+    "description": "Prompt para gerar código Python otimizado",
+    "content": "Gere código Python limpo e eficiente para a seguinte tarefa: ...",
+    "status": "Ativo",
+    "createdBy": "usuario@example.com",
+    "tags": "python,codigo,ia",
+    "modelType": "GPT-4"
+  }'
+```
+
+### Obter todos os Prompts
+
+```bash
+curl https://localhost:7000/api/prompts
+```
+
+### Buscar Prompt por ID
+
+```bash
+curl https://localhost:7000/api/prompts/1
+```
+
+### Atualizar um Prompt
+
+```bash
+curl -X PUT https://localhost:7000/api/prompts/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Gerador de Código Python v2",
+    "description": "Prompt atualizado para gerar código Python",
+    "content": "Novo conteúdo do prompt...",
+    "status": "Ativo",
+    "updatedBy": "usuario@example.com"
+  }'
+```
+
+### Deletar um Prompt
+
+```bash
+curl -X DELETE https://localhost:7000/api/prompts/1
+```
+
+### Incrementar Versão
+
+```bash
+curl -X POST https://localhost:7000/api/prompts/1/increment-version
+```
+
 ## Próximos Passos
 
-1. Implementar a camada de serviços (`PromptService`)
-2. Criar a controller com endpoints CRUD
-3. Adicionar validações e tratamento de exceções
-4. Implementar testes unitários
-5. Adicionar autenticação e autorização
-6. Implementar paginação e filtros avançados
+1. Implementar testes unitários com xUnit
+2. Adicionar autenticação e autorização (JWT)
+3. Implementar paginação e filtros avançados
+4. Adicionar cache distribuído (Redis)
+5. Implementar rate limiting
+6. Adicionar auditoria de mudanças
+7. Implementar versionamento de API
 
 ## Contribuindo
 

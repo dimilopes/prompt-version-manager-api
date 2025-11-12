@@ -1,4 +1,5 @@
 using PromptVersionManager.Data;
+using PromptVersionManager.Middleware;
 using PromptVersionManager.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -61,6 +62,9 @@ if (app.Environment.IsDevelopment())
         c.RoutePrefix = string.Empty;
     });
 }
+
+// Registrar middleware de tratamento de exceções
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");

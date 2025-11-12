@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PromptVersionManager")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f5cfed567f887aaf6b1cc1846c0306fadc308daf")]
 [assembly: System.Reflection.AssemblyProductAttribute("PromptVersionManager")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PromptVersionManager")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -21,9 +21,14 @@ PromptVersionManager/
 ├── Models/                 # Classes de domínio
 │   └── Prompt.cs          # Entidade Prompt
 ├── Data/                  # Camada de acesso a dados
-│   └── DatabaseConnection.cs  # Gerenciador de conexão SQLite
-├── Services/              # Camada de lógica de negócio (em desenvolvimento)
-├── Controllers/           # Controladores da API (em desenvolvimento)
+│   ├── DatabaseConnection.cs  # Gerenciador de conexão SQLite
+│   ├── IPromptRepository.cs   # Interface do repositório
+│   └── PromptRepository.cs    # Implementação do repositório com Dapper
+├── Services/              # Camada de lógica de negócio
+│   ├── IPromptService.cs      # Interface do serviço
+│   └── PromptService.cs       # Implementação do serviço
+├── Controllers/           # Controladores da API
+│   └── PromptsController.cs   # Controller CRUD de Prompts
 ├── Program.cs            # Configuração da aplicação
 ├── appsettings.json      # Configurações da aplicação
 └── PromptVersionManager.csproj  # Arquivo de projeto
@@ -65,16 +70,40 @@ PromptVersionManager/
 - Tabela: `Prompts`
 - Inicialização automática ao iniciar a aplicação
 
-### ⏳ Fase 2: Implementação do Core (Branch: `feature/implementacao-core`)
+### ✅ Fase 2: Implementação do Core (Branch: `feature/implementacao-core`)
 
-**Status**: Pendente
+**Status**: Concluída
 
-**Implementações Planejadas**:
-- Criar a controller `PromptsController`
-- Implementar endpoints CRUD (Create, Read, Update, Delete)
-- Criar a camada `PromptService` com lógica de negócio
-- Registrar serviços na injeção de dependência
-- Implementar validações básicas
+**Implementações**:
+- ✅ Criação da interface `IPromptRepository` para abstração de dados
+- ✅ Implementação de `PromptRepository` com Dapper para operações CRUD
+- ✅ Criação da interface `IPromptService` para lógica de negócio
+- ✅ Implementação de `PromptService` com validações e logging
+- ✅ Criação de `PromptsController` com endpoints REST
+- ✅ Registro de serviços na injeção de dependência
+- ✅ Compilação bem-sucedida do projeto
+
+**Endpoints Implementados**:
+
+| Método | Rota | Descrição |
+|--------|------|----------|
+| GET | `/api/prompts` | Obtém todos os prompts |
+| GET | `/api/prompts/{id}` | Obtém um prompt pelo ID |
+| GET | `/api/prompts/search/by-name?name=...` | Busca prompts por nome |
+| GET | `/api/prompts/filter/by-status?status=...` | Filtra prompts por status |
+| GET | `/api/prompts/filter/by-model?modelType=...` | Filtra prompts por modelo de IA |
+| GET | `/api/prompts/stats/count` | Obtém contagem total de prompts |
+| POST | `/api/prompts` | Cria um novo prompt |
+| PUT | `/api/prompts/{id}` | Atualiza um prompt existente |
+| DELETE | `/api/prompts/{id}` | Deleta um prompt |
+| POST | `/api/prompts/{id}/increment-version` | Incrementa a versão de um prompt |
+
+**Padrões Implementados**:
+- Repository Pattern para abstração de dados
+- Service Layer para lógica de negócio
+- Dependency Injection para inversão de controle
+- Logging estruturado em todas as operações
+- Tratamento de exceções com códigos HTTP apropriados
 
 ### ⏳ Fase 3: Validações e Melhorias (Branch: `feature/validacoes-melhorias`)
 

@@ -14,32 +14,6 @@ O **Prompt Version Manager API** é uma solução robusta construída em **ASP.N
 - **Linguagem**: C# 12.0
 - **Documentação API**: Swagger/OpenAPI
 
-## Estrutura do Projeto
-
-```
-PromptVersionManager/
-├── Models/                 # Classes de domínio
-│   └── Prompt.cs          # Entidade Prompt
-├── Data/                  # Camada de acesso a dados
-│   ├── DatabaseConnection.cs  # Gerenciador de conexão SQLite
-│   ├── IPromptRepository.cs   # Interface do repositório
-│   └── PromptRepository.cs    # Implementação do repositório com Dapper
-├── Services/              # Camada de lógica de negócio
-│   ├── IPromptService.cs      # Interface do serviço
-│   └── PromptService.cs       # Implementação do serviço
-├── Controllers/           # Controladores da API
-│   └── PromptsController.cs   # Controller CRUD de Prompts
-├── Validators/            # Validadores de dados
-│   └── PromptValidator.cs     # Validador de Prompts
-├── Exceptions/            # Exceções customizadas
-│   └── ApiException.cs        # Exceções da API
-├── Middleware/            # Middlewares da aplicação
-│   └── ExceptionHandlingMiddleware.cs  # Tratamento global de exceções
-├── Program.cs            # Configuração da aplicação
-├── appsettings.json      # Configurações da aplicação
-└── PromptVersionManager.csproj  # Arquivo de projeto
-```
-
 ## Fases de Desenvolvimento
 
 ### ✅ Fase 1: Modelagem do Domínio (Branch: `feature/modelagem-dominio`)
